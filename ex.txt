@@ -1,0 +1,32 @@
+default
+
+proxy_pass https://backend;
+proxy_next_upstream error timeout invalid_header http_500 http_502 http_503 http_504;
+
+#alternate  
+proxy_pass https://backend
+proxy_next_upstream error timeout http_500 http_502 http_503 http_504
+
+
+ngnix.conf
+
+upstream backend {
+server <>;
+server <>;
+}
+
+
+
+time.py
+from datetime import datetime
+print(f"Executed time{datetime.now()}")
+
+test.sh
+
+#! /bin/bash
+
+cd path of py file
+
+cd /home/ubuntu/output
+
+python3 time.py >> output.txt
