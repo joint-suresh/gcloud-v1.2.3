@@ -1,32 +1,71 @@
-default
+1) load balancing -------------------------------------------------
+Other 2:
+sudo apt update
+# if error came use "sudo apt update --fix-missing"
+sudo apt install apache2 gedit
+Firefox -->localhost(get file path from FireFox)
+sudo gedit Filepath --> Change some content -->save file
+ip a --> to get ip address
 
-proxy_pass https://backend;
-proxy_next_upstream error timeout invalid_header http_500 http_502 http_503 http_504;
+Main VM:
+sudo apt update
+sudo apt install nginx apache2 gedit
+sudo systemctl start nginx
+sudo gedit /etc/nginx/nginx.conf
 
-#alternate  
-proxy_pass https://backend
-proxy_next_upstream error timeout http_500 http_502 http_503 http_504
+--->Edit the nginx.conf file
+comment out # two include statements inside http{}
 
+# Define backend servers inside http{}
+upstream backend_servers {
+    server 192.168.56.101:5000;   # App Server 1
+    server 192.168.56.102:5000;   # App Server 2
+    # server 192.168.56.103:5000; # Add more if needed
+}
 
-ngnix.conf
+# Load balancer server
+server {
+    listen 80;
 
-upstream backend {
-server <>;
-server <>;
+    location / {
+        proxy_pass http://backend_servers;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
 }
 
 
+save the file
+sudo systemctl restart nginx
+FireFox --->localhost --->Refresh
 
-time.py
-from datetime import datetime
-print(f"Executed time{datetime.now()}")
+2 )task scheduling ----------------------------------------------------------------------
 
-test.sh
+sudo apt update
+sudo apt install cronie
+if error came retype "sudo apt install cronie"
 
-#! /bin/bash
 
-cd path of py file
 
-cd /home/ubuntu/output
+nano ./task.sh
 
-python3 time.py >> output.txt
+
+#!/bin/bash
+date >> /home/ubuntu/output.txt
+cntl + X 
+Y
+enter
+
+chmod +x ./task.sh
+
+crontab -e
+type 1 and enter
+* * * * * /home/ubuntu/task.sh
+cntl + X 
+Y
+enter
+
+crontab -l
+./task.sh
+tail -f  ./output.txt
