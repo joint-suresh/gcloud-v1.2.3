@@ -1,71 +1,71 @@
-1) load balancing -------------------------------------------------
-Other 2:
-sudo apt update
-# if error came use "sudo apt update --fix-missing"
-sudo apt install apache2 gedit
-Firefox -->localhost(get file path from FireFox)
-sudo gedit Filepath --> Change some content -->save file
-ip a --> to get ip address
+# ================================== Ex 4 ==================================
+1. sudo apt update (in vm 0)
+2. sudo apt install nginx
+3. cd /etc
+4. cd nginx
+5. sudo apt install gedit
+6. sudo gedit nginx.conf
 
-Main VM:
-sudo apt update
-sudo apt install nginx apache2 gedit
-sudo systemctl start nginx
-sudo gedit /etc/nginx/nginx.conf
-
---->Edit the nginx.conf file
-comment out # two include statements inside http{}
-
-# Define backend servers inside http{}
-upstream backend_servers {
-    server 192.168.56.101:5000;   # App Server 1
-    server 192.168.56.102:5000;   # App Server 2
-    # server 192.168.56.103:5000; # Add more if needed
+open nginx.conf{
+    add 
+        http{
+            upstream backend{
+                server ip a;(vm 1)
+                server ip a;(vm 2)
+            }
+        }
 }
 
-# Load balancer server
-server {
-    listen 80;
+7. cd sites-available
+8. sudo gedit default
 
-    location / {
-        proxy_pass http://backend_servers;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+open default{
+    add
+        location{
+            proxy_pass http://backend;
+            proxy_next_upstream error timeout invalid_header http_500 http_502 http_503 http_504;
+        }    
+}
+
+9. go to vm 1
+10. sudo apt update
+11. sudo apt install apache2 -y
+12. go to vm 2
+13. repat 10 11
+14. browser enter ip
+15. go to main
+16. systemctl status apache2
+17. vm 1
+18. cd /var
+19. cd www
+20. cd html
+21. sudo apt install
+22. sudo gedit index.html
+23. add h1 tag
+24. main
+25. systemctl start nginx
+
+# ================================== Ex 5 ==================================
+1. sudo apt update
+2. systemctl restart cron
+3. sudo apt install gedit
+4. sudo gedit ~/task.sh
+
+open task.sh{
+    add{
+        #!/bin/bash
+        echo " Hi from hari $(date)" >> ~/output.txt
     }
 }
 
+5. chmod +x ~/task.sh
+6. crontab -e
 
-save the file
-sudo systemctl restart nginx
-FireFox --->localhost --->Refresh
+open{
+    add{
+        * * * * * ~/task.sh
+    }
+}
 
-2 )task scheduling ----------------------------------------------------------------------
-
-sudo apt update
-sudo apt install cronie
-if error came retype "sudo apt install cronie"
-
-
-
-nano ./task.sh
-
-
-#!/bin/bash
-date >> /home/ubuntu/output.txt
-cntl + X 
-Y
-enter
-
-chmod +x ./task.sh
-
-crontab -e
-type 1 and enter
-* * * * * /home/ubuntu/task.sh
-cntl + X 
-Y
-enter
-
-crontab -l
-./task.sh
-tail -f  ./output.txt
+7. cat output.txt
+8. watch cat output.txt
