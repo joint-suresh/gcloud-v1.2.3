@@ -32,18 +32,39 @@ open default{
 11. sudo apt install apache2 -y
 12. go to vm 2
 13. repat 10 11
-14. browser enter ip
-15. go to main
-16. systemctl status apache2
 17. vm 1
 18. cd /var
 19. cd www
 20. cd html
-21. sudo apt install
 22. sudo gedit index.html
-23. add h1 tag
-24. main
+
+ IN MAIN
+24. systemctl enable nginx
 25. systemctl start nginx
+
+
+ GO TO VM1
+
+systemctl enable apache2
+systemctl start apache2
+
+
+GO TO VM2
+
+systemctl enable apache2
+systemctl start apache2
+
+
+GO TO MAIN
+
+open firefox  and enter main ip ,check, if not working
+
+systemctl restart nginx
+
+check again
+
+
+
 
 # ================================== Ex 5 ==================================
 1. sudo apt update
@@ -51,21 +72,32 @@ open default{
 3. sudo apt install gedit
 4. sudo gedit ~/task.sh
 
-open task.sh{
-    add{
-        #!/bin/bash
-        echo " Hi from hari $(date)" >> ~/output.txt
-    }
-}
+open task.sh
+
+#!/bin/bash
+for i in {1..6}
+do
+    echo " Hi from hari $(date)" >> ~/output.txt
+    sleep 10 (edit accordingly)
+done
+
+save and close
+create a output.txt in the folder of task.sh
+
+open terminal
 
 5. chmod +x ~/task.sh
 6. crontab -e
 
-open{
-    add{
-        * * * * * ~/task.sh
-    }
-}
+* * * * * ~/task.sh
+
+ctrl+x
+y
+enter
+
 
 7. cat output.txt
 8. watch cat output.txt
+
+
+
